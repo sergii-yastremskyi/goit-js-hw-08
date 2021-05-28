@@ -1,4 +1,4 @@
- import importedImages from '/src/gallery-items.js';
+ import importedImages from './src/gallery-items.js';
 
 
 const gallery = document.querySelector('ul');
