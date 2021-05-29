@@ -2,9 +2,10 @@
 
 
 const gallery = document.querySelector('ul');
+let currentIndex;
 
 const createGalleryMarkup = (images) => {
-    const markup = images.map(({ preview, original, description }) => {
+    const markup = images.map(({ preview, original, description },index) => {
         return `
         <li class="gallery__item">
   <a
@@ -15,6 +16,7 @@ const createGalleryMarkup = (images) => {
       class="gallery__image"
       src="${preview}"
       data-source="${original}"
+      data-index="${index}"
       alt="${description}"
     />
   </a>
@@ -41,8 +43,9 @@ const galleryOnClick = (e) => {
     }
     modalImage.src = e.target.dataset.source;
     modalImage.alt = e.target.alt;
+    currentIndex = e.target.dataset.index;
     modalWindow.classList.add('is-open');
-    console.log(e.target);
+    console.log(currentIndex);
 };
 const modalClose = (e) => {
     if (!e.target.classList.contains('lightbox__button') && !e.target.classList.contains('lightbox__overlay')) {
@@ -52,7 +55,7 @@ const modalClose = (e) => {
     modalImage.alt = '';
     modalWindow.classList.remove('is-open');
 }
-const modalCloseKey = (e) => {
+const onKeyDown = (e) => {
     console.log(e.key)
      if (e.key==='Escape') {
         modalImage.src = '';
@@ -61,11 +64,41 @@ const modalCloseKey = (e) => {
      }
     
     if (e.key === 'ArrowRight') {
+        if (importedImages.length < currentIndex + 2) { currentIndex = 0 }
+        else { 
+        currentIndex = parseInt(currentIndex) + 1;
+        }
+        console.log(currentIndex);
+        modalImage.src = importedImages[currentIndex].original;
+    modalImage.alt = importedImages[currentIndex].alt;
         
     }
+    if (e.key === 'ArrowLeft') {
+        if (currentIndex-1 < 0) { currentIndex = importedImages.length-1  }
+        else {currentIndex = parseInt(currentIndex) - 1; }
+       console.log(currentIndex);
+       modalImage.src = importedImages[currentIndex].original;
+    modalImage.alt = importedImages[currentIndex].alt;
+        
+    }
+}
+
+// const arrowRight = (e) => {
+//     if (!e.key === 'ArrowRight') {
+//         return
+//     }
+//     const currentImageSec = document.querySelector('lightbox__image');
+//     const currentGallery = document.querySelector('img.')
+// }
+const colorChanger = (e) => {
+    console.log(e.key);
+    console.log(e.target);
+   
 }
 
 
 gallery.addEventListener('click', galleryOnClick);
 modalWindow.addEventListener('click', modalClose);
-document.addEventListener('keydown', modalCloseKey);
+document.addEventListener('keydown', onKeyDown);
+
+
